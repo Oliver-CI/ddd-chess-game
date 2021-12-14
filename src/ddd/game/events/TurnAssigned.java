@@ -1,7 +1,7 @@
-package ddd.game.domainevents;
+package ddd.game.events;
 
 import ddd.core.DomainEvent;
-import ddd.game.valueobject.Player;
+import ddd.game.domain.Player;
 
 public class TurnAssigned extends DomainEvent {
     private final Player currentPlayer;

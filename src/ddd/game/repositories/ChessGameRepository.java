@@ -1,6 +1,6 @@
-package ddd.game.repository;
+package ddd.game.repositories;
 
-import ddd.game.ChessGame;
+import ddd.game.domain.ChessGame;
 
 import java.util.HashMap;
 import java.util.Map;

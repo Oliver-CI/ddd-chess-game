@@ -1,4 +1,4 @@
-package ddd.game.valueobject;
+package ddd.game.domain;
 
 import ddd.core.ValueObject;
 

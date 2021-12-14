@@ -1,7 +1,7 @@
-package ddd.game.domainevents;
+package ddd.game.events;
 
-import ddd.game.valueobject.Move;
-import ddd.game.valueobject.Player;
+import ddd.game.domain.Move;
+import ddd.game.domain.Player;
 
 public class MoveMade extends ddd.core.DomainEvent {
     private final Move move;

@@ -1,7 +1,7 @@
-package ddd.game.command;
+package ddd.game.commands;
 
-import ddd.game.ChessGame;
-import ddd.game.repository.ChessGameRepository;
+import ddd.game.domain.ChessGame;
+import ddd.game.repositories.ChessGameRepository;
 
 import java.util.UUID;
 

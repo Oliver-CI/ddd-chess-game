@@ -1,6 +1,6 @@
-package ddd.game.command;
+package ddd.game.commands;
 
-import ddd.game.valueobject.Player;
+import ddd.game.domain.Player;
 
 import java.util.UUID;
 
