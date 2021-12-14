@@ -1,14 +1,13 @@
 package ddd.game.domainevents;
 
 import ddd.game.valueobject.Move;
-
-import java.util.UUID;
+import ddd.game.valueobject.Player;
 
 public class MoveMade extends ddd.core.DomainEvent {
     private final Move move;
-    private final UUID currentPlayer;
+    private final Player currentPlayer;
 
-    public MoveMade(Move move, UUID currentPlayer) {
+    public MoveMade(Move move, Player currentPlayer) {
         this.move = move;
         this.currentPlayer = currentPlayer;
     }
@@ -17,7 +16,7 @@ public class MoveMade extends ddd.core.DomainEvent {
         return move;
     }
 
-    public UUID getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 }

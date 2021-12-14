@@ -11,8 +11,10 @@ import ddd.game.valueobject.Move;
 import ddd.game.valueobject.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class ChessGame extends AggregateRoot<UUID> {
 
@@ -26,6 +28,7 @@ public class ChessGame extends AggregateRoot<UUID> {
         moves = new ArrayList<>();
     }
 
+    // region domain events
     public void when(DomainEvent domainEvent) {
         switch (domainEvent) {
             case GameStarted gameStarted -> setPlayer(gameStarted);
@@ -37,7 +40,8 @@ public class ChessGame extends AggregateRoot<UUID> {
     }
 
     private void switchPlayer(MoveMade moveMade) {
-
+        final Player player = moveMade.getCurrentPlayer() == white ? black : white;
+        raiseEvent(new TurnAssigned(player));
     }
 
     private void setActivePlayer(TurnAssigned turnAssigned) {
@@ -50,6 +54,9 @@ public class ChessGame extends AggregateRoot<UUID> {
         black = gameStarted.getPlayerBlack();
     }
 
+    // endregion
+
+    // region command
     public void startGame(StartGame startGame) {
         raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
         raiseEvent(new TurnAssigned(startGame.playerId1()));
@@ -57,7 +64,8 @@ public class ChessGame extends AggregateRoot<UUID> {
 
     public boolean makeMove(MakeMove makeMove) {
         //todo validation player
-        final UUID currentPlayer = makeMove.currentPlayer();
+        final Player currentPlayer = makeMove.currentPlayer();
+        final boolean b = Arrays.asList(white, black).contains(currentPlayer);
 
         //todo validation move
         final Move move = makeMove.move();
@@ -66,4 +74,5 @@ public class ChessGame extends AggregateRoot<UUID> {
         raiseEvent(new MoveMade(move, currentPlayer));
         return true;
     }
+    // endregion
 }
