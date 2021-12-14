@@ -15,7 +15,7 @@ public class ChessGameRepository {
     }
 
     public void save(ChessGame chessGame) {
-        chessGames.putIfAbsent(chessGame.getId(), chessGame);
+        chessGames.putIfAbsent(chessGame.getId().id(), chessGame);
     }
 
     public ChessGame findById(UUID chessGameId) {

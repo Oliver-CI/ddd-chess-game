@@ -1,5 +1,6 @@
 package ddd.game.commands;
 
+import ddd.game.ChessEngine;
 import ddd.game.domain.ChessGame;
 import ddd.game.repositories.ChessGameRepository;
 
@@ -13,12 +14,13 @@ public class CommandHandler {
         this.repository = repository;
     }
 
-    public UUID executeCommand(StartGame command) {
+    public ChessGame.Id executeCommand(StartGame command) {
         //todo create aggreate
-        var chessGame = new ChessGame(UUID.randomUUID());
+        var chessGame = new ChessGame(new ChessGame.Id(UUID.randomUUID()));
+        final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
 
         //todo execute command on aggreate
-        chessGame.startGame(command);
+        chessEngine.startGame(command);
 
         repository.save(chessGame);
 
@@ -27,9 +29,10 @@ public class CommandHandler {
 
     public boolean executeCommand(MakeMove command) {
         //todo create aggreate
-        final ChessGame chessGame = repository.findById(command.chessGameId());
+        final ChessGame chessGame = repository.findById(command.chessGameId().id());
+        final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
 
         //todo execute command on aggreate
-        return chessGame.makeMove(command);
+        return chessEngine.makeMove(command);
     }
 }

@@ -23,7 +23,7 @@ public class Main {
         var player1 = new Player(new Player.Id(UUID.randomUUID()));
         var player2 = new Player(new Player.Id((UUID.randomUUID())));
         final StartGame command = new StartGame(player1, player2, gameInvite);
-        final UUID chessGameId = commandHandler.executeCommand(command);
+        var chessGameId = commandHandler.executeCommand(command);
 
         try (Scanner scanner = new Scanner(System.in)) {
             var player = player1;
