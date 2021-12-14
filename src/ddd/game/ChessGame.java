@@ -28,18 +28,10 @@ public class ChessGame extends AggregateRoot<UUID> {
 
     public void when(DomainEvent domainEvent) {
         switch (domainEvent) {
-            case GameStarted gameStarted:
-                setPlayer(gameStarted);
-                break;
-            case TurnAssigned turnAssigned:
-                setActivePlayer(turnAssigned);
-                break;
-
-            case MoveMade moveMade:
-                switchPlayer(moveMade);
-                break;
-            default:
-                throw new UnsupportedOperationException();
+            case GameStarted gameStarted -> setPlayer(gameStarted);
+            case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
+            case MoveMade moveMade -> switchPlayer(moveMade);
+            default -> throw new UnsupportedOperationException();
         }
 
     }
@@ -59,16 +51,16 @@ public class ChessGame extends AggregateRoot<UUID> {
     }
 
     public void startGame(StartGame startGame) {
-        raiseEvent(new GameStarted(startGame.getPlayerId1(), startGame.getPlayerId2()));
-        raiseEvent(new TurnAssigned(startGame.getPlayerId1()));
+        raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
+        raiseEvent(new TurnAssigned(startGame.playerId1()));
     }
 
     public boolean makeMove(MakeMove makeMove) {
         //todo validation player
-        final UUID currentPlayer = makeMove.getCurrentPlayer();
+        final UUID currentPlayer = makeMove.currentPlayer();
 
         //todo validation move
-        final Move move = makeMove.getMove();
+        final Move move = makeMove.move();
 
         moves.add(move);
         raiseEvent(new MoveMade(move, currentPlayer));

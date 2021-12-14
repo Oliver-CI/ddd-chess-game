@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class ChessGameRepository {
 
-    private Map<UUID, ChessGame> chessGames;
+    private final Map<UUID, ChessGame> chessGames;
 
     public ChessGameRepository() {
         this.chessGames = new HashMap<>();

@@ -27,7 +27,7 @@ public class CommandHandler {
 
     public boolean executeCommand(MakeMove command) {
         //todo create aggreate
-        final ChessGame chessGame = repository.findById(command.getChessGameId());
+        final ChessGame chessGame = repository.findById(command.chessGameId());
 
         //todo execute command on aggreate
         return chessGame.makeMove(command);
