@@ -1,4 +1,4 @@
-package ddd.game;
+package ddd.game.valueobject;
 
 public enum Color {
 
