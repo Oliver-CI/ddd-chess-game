@@ -1,6 +1,6 @@
 package ddd.game.domain;
 
-public enum Color {
+public enum ChessPieceColor {
 
     WHITE, BLACK
 

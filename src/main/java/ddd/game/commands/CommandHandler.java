@@ -33,6 +33,7 @@ public class CommandHandler {
         final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
 
         //todo execute command on aggreate
-        return chessEngine.makeMove(command);
+        chessGame.makeMove(command.move(), command.currentPlayer());
+        return true;
     }
 }
