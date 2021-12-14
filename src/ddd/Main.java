@@ -16,11 +16,14 @@ public class Main {
 
     public static void main(String[] args) {
         // write your code here
+        System.out.println("**************************");
+        System.out.println("*     The Bruur Game     *");
+        System.out.println("**************************\n");
         final CommandHandler commandHandler = new CommandHandler(new ChessGameRepository());
         final UUID gameInvite = UUID.randomUUID();
-        final UUID player1 = UUID.randomUUID();
-        final UUID player2 = UUID.randomUUID();
-        final StartGame command = new StartGame(new Player(player1), new Player(player2), gameInvite);
+        var player1 = new Player(UUID.randomUUID());
+        var player2 = new Player(UUID.randomUUID());
+        final StartGame command = new StartGame(player1, player2, gameInvite);
         final UUID chessGameId = commandHandler.executeCommand(command);
 
         try (Scanner scanner = new Scanner(System.in)) {
