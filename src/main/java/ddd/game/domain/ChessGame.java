@@ -51,4 +51,11 @@ public class ChessGame extends Entity<ChessGame.Id> {
 
     }
 
+    public Map<Position, ChessPiece> getBoard() {
+        return board;
+    }
+
+    public List<Move> getMoves() {
+        return moves;
+    }
 }

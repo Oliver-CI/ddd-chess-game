@@ -15,19 +15,19 @@ public class CommandHandler {
     }
 
     public ChessGame.Id executeCommand(StartGame command) {
-        final ChessGame.Id id = new ChessGame.Id(UUID.randomUUID());
-        final ChessEngine chessEngine = new ChessEngine(id);
+        final ChessGame chessGame = new ChessGame(new ChessGame.Id(UUID.randomUUID()));
+        final ChessEngine chessEngine = new ChessEngine(chessGame);
 
         chessEngine.startGame(command);
 
         repository.save(chessEngine.getChessGame());
 
-        return id;
+        return chessGame.getId();
     }
 
     public boolean executeCommand(MakeMove command) {
         final ChessGame chessGame = repository.findById(command.chessGameId().id());
-        final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
+        final ChessEngine chessEngine = new ChessEngine(chessGame);
 
         return chessEngine.makeMove(command);
     }

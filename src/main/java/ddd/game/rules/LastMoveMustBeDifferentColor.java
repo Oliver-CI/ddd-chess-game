@@ -21,6 +21,10 @@ public class LastMoveMustBeDifferentColor {
     }
 
     public void checkRule() {
+        if (moves.isEmpty()) {
+            return;
+        }
+
         final Move lastMove = moves.get(moves.size() - 1);
         if (isWhite && board.get(lastMove.target()).getColor() == ChessPieceColor.WHITE) {
             throw new BusinessRuleViolationException("Not ur turn mate !!! BACKOFF");

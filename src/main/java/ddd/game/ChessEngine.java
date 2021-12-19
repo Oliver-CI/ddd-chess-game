@@ -15,9 +15,9 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
     private final ChessGame chessGame;
 
-    public ChessEngine(ChessGame.Id id) {
-        super(id);
-        chessGame = new ChessGame(id);
+    public ChessEngine(ChessGame chessGame) {
+        super(chessGame.getId());
+        this.chessGame = chessGame;
     }
 
     public ChessGame getChessGame() {
@@ -43,12 +43,11 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
     private void setActivePlayer(TurnAssigned turnAssigned) {
         //notify Player
-        System.out.printf("It is the turn of %s", turnAssigned.getCurrentPlayer());
+        System.out.println("It is the turn of " + turnAssigned.getCurrentPlayer());
     }
 
     private void setPlayer(GameStarted gameStarted) {
         chessGame.assignPlayers(gameStarted.getPlayerWhite(), gameStarted.getPlayerBlack());
-        throw new UnsupportedOperationException();
     }
 
     // endregion

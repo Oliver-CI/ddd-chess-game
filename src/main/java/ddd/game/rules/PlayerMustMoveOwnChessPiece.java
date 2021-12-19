@@ -22,10 +22,8 @@ public class PlayerMustMoveOwnChessPiece {
     public void checkRule() {
         final ChessPiece chessPiece = board.get(move.source());
         final ChessPieceColor chessPieceColor = chessPiece.getColor();
-        if (isWhite && chessPieceColor != ChessPieceColor.WHITE) {
-            throw new IllegalArgumentException();
+        if (isWhite && chessPieceColor != ChessPieceColor.WHITE || !isWhite && chessPieceColor != ChessPieceColor.BLACK) {
+            throw new IllegalArgumentException("Piece is not of the current player");
         }
-
-        throw new BusinessRuleViolationException("No chess piece found on selected position");
     }
 }

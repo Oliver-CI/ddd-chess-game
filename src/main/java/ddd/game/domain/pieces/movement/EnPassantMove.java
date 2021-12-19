@@ -7,7 +7,7 @@ public record EnPassantMove(ChessPieceColor color) implements MovementStrategy {
 
     @Override
     public boolean supportsMove(Move move) {
-        final int targetX = move.target().getX();
-        return move.source().getX() == 2 && (targetX == Range.SINGLE.getValue() || targetX == Range.EN_PASSANT.getValue());
+        final int targetY = move.target().getY();
+        return move.source().getY() == 2 && (targetY == 3 || targetY == 4);
     }
 }
