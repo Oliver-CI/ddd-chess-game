@@ -2,7 +2,6 @@ package ddd.game.rules;
 
 import ddd.game.domain.ChessPieceColor;
 import ddd.game.domain.Move;
-import ddd.game.domain.Player;
 import ddd.game.domain.Position;
 import ddd.game.domain.pieces.ChessPiece;
 

@@ -6,6 +6,23 @@ package ddd.core;
  * </summary>
  */
 public abstract class ValueObject {
+    private static boolean areEqual(ValueObject left, ValueObject right) {
+        if (left == null)
+            return right == null;
+        else if (right == null)
+            return false;
+        else {
+            Object[] leftValues = left.getAtomicValues();
+            Object[] rightValues = right.getAtomicValues();
+
+            boolean result = true;
+            for (int i = 0; i < leftValues.length; i++) {
+                result = result && leftValues[i].equals(rightValues[i]);
+            }
+            return result;
+        }
+    }
+
     protected abstract Object[] getAtomicValues();
 
     public boolean equals(Object obj) {
@@ -22,23 +39,6 @@ public abstract class ValueObject {
             }
         }
         return result;
-    }
-
-    private static boolean areEqual(ValueObject left, ValueObject right) {
-        if (left == null)
-            return right == null;
-        else if (right == null)
-            return false;
-        else {
-            Object[] leftValues = left.getAtomicValues();
-            Object[] rightValues = right.getAtomicValues();
-
-            boolean result = true;
-            for (int i = 0; i < leftValues.length; i++) {
-                result = result && leftValues[i].equals(rightValues[i]);
-            }
-            return result;
-        }
     }
 
 }

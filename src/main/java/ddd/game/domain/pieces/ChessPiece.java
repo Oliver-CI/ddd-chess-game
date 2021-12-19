@@ -1,6 +1,9 @@
 package ddd.game.domain.pieces;
 
 import ddd.game.domain.ChessPieceColor;
+import ddd.game.domain.pieces.movement.MovementStrategy;
+
+import java.util.List;
 
 public abstract class ChessPiece {
 
@@ -14,4 +17,5 @@ public abstract class ChessPiece {
         return chessPieceColor;
     }
 
+    public abstract List<MovementStrategy> getMovementStrategies();
 }

@@ -15,25 +15,20 @@ public class CommandHandler {
     }
 
     public ChessGame.Id executeCommand(StartGame command) {
-        //todo create aggreate
-        var chessGame = new ChessGame(new ChessGame.Id(UUID.randomUUID()));
-        final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
+        final ChessGame.Id id = new ChessGame.Id(UUID.randomUUID());
+        final ChessEngine chessEngine = new ChessEngine(id);
 
-        //todo execute command on aggreate
         chessEngine.startGame(command);
 
-        repository.save(chessGame);
+        repository.save(chessEngine.getChessGame());
 
-        return chessGame.getId();
+        return id;
     }
 
     public boolean executeCommand(MakeMove command) {
-        //todo create aggreate
         final ChessGame chessGame = repository.findById(command.chessGameId().id());
         final ChessEngine chessEngine = new ChessEngine(chessGame.getId());
 
-        //todo execute command on aggreate
-        chessGame.makeMove(command.move(), command.currentPlayer());
-        return true;
+        return chessEngine.makeMove(command);
     }
 }

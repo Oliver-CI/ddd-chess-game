@@ -11,14 +11,17 @@ import ddd.game.events.GameStarted;
 import ddd.game.events.MoveMade;
 import ddd.game.events.TurnAssigned;
 
-import java.util.Arrays;
-
 public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
-    private ChessGame chessGame;
+    private final ChessGame chessGame;
 
     public ChessEngine(ChessGame.Id id) {
         super(id);
+        chessGame = new ChessGame(id);
+    }
+
+    public ChessGame getChessGame() {
+        return chessGame;
     }
 
     // region domain events
@@ -44,8 +47,7 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     }
 
     private void setPlayer(GameStarted gameStarted) {
-//        white = gameStarted.getPlayerWhite();
-//        black = gameStarted.getPlayerBlack();
+        chessGame.assignPlayers(gameStarted.getPlayerWhite(), gameStarted.getPlayerBlack());
         throw new UnsupportedOperationException();
     }
 
@@ -53,22 +55,17 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
     // region command
     public void startGame(StartGame startGame) {
+        chessGame.loadBoard();
         raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
         raiseEvent(new TurnAssigned(startGame.playerId1()));
     }
 
     public boolean makeMove(MakeMove makeMove) {
-//        //todo validation player
-//        final Player currentPlayer = makeMove.currentPlayer();
-//        final boolean b = Arrays.asList(white, black).contains(currentPlayer);
-//
-//        //todo validation move
-//        final Move move = makeMove.move();
-//
-//        moves.add(move);
-//        raiseEvent(new MoveMade(move, currentPlayer));
-//        return true;
-        throw new UnsupportedOperationException();
+        final Player currentPlayer = makeMove.currentPlayer();
+        final Move move = makeMove.move();
+        chessGame.makeMove(move, currentPlayer);
+        raiseEvent(new MoveMade(move, currentPlayer));
+        return true;
     }
     // endregion
 }

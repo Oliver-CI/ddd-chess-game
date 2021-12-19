@@ -10,6 +10,16 @@ import java.util.List;
 public abstract class BusinessRule {
     /**
      * <summary>
+     * Checks the business rule and throws a BusinessRuleViolationException if it is not satified
+     * </summary>
+     * <exception cref="BusinessRuleViolationException">if the rule is not satified</exception>
+     */
+    public static void throwIfNotSatisfied(BusinessRule rule) {
+        rule.throwIfNotSatisfied();
+    }
+
+    /**
+     * <summary>
      * Checks the business rule
      * </summary>
      * <returns>all violations against the rule</returns>
@@ -28,16 +38,6 @@ public abstract class BusinessRule {
         if (violations != null && !violations.isEmpty()) {
             throw new BusinessRuleViolationException(violations);
         }
-    }
-
-    /**
-     * <summary>
-     * Checks the business rule and throws a BusinessRuleViolationException if it is not satified
-     * </summary>
-     * <exception cref="BusinessRuleViolationException">if the rule is not satified</exception>
-     */
-    public static void throwIfNotSatisfied(BusinessRule rule) {
-        rule.throwIfNotSatisfied();
     }
 
     /**

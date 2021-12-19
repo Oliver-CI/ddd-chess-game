@@ -16,43 +16,24 @@ public abstract class AggregateRoot<I> extends Entity<I> {
      * </summary>
      */
     private final ArrayList<DomainEvent> events;
-
-    public List<DomainEvent> getEvents() {
-        return events;
-    }
-
     /**
      * <summary>
      * Indication whether the aggregate is replaying events (true) or not (false).
      * </summary>
      */
     private boolean isReplaying = false;
-
-    protected boolean isRelaying() {
-        return isReplaying;
-    }
-
     /**
      * <summary>
      * The current version after handling any commands.
      * </summary>
      */
     private int version;
-
-    public int getVersion() {
-        return version;
-    }
-
     /**
      * <summary>
      * The original version of the aggregate after replaying all events in the event-store.
      * </summary>
      */
     private int originalVersion;
-
-    public int getOriginalVersion() {
-        return originalVersion;
-    }
 
     /**
      * <summary>
@@ -84,6 +65,22 @@ public abstract class AggregateRoot<I> extends Entity<I> {
             version++;
         }
         isReplaying = false;
+    }
+
+    public List<DomainEvent> getEvents() {
+        return events;
+    }
+
+    protected boolean isRelaying() {
+        return isReplaying;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public int getOriginalVersion() {
+        return originalVersion;
     }
 
     /**
