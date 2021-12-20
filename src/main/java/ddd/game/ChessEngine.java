@@ -14,10 +14,12 @@ import ddd.game.events.TurnAssigned;
 public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
     private final ChessGame chessGame;
+    private final BoardPrinter printer;
 
     public ChessEngine(ChessGame chessGame) {
         super(chessGame.getId());
         this.chessGame = chessGame;
+        this.printer = new BoardPrinter();
     }
 
     public ChessGame getChessGame() {
@@ -29,10 +31,17 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
         switch (domainEvent) {
             case GameStarted gameStarted -> setPlayer(gameStarted);
             case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
-            case MoveMade moveMade -> switchPlayer(moveMade);
+            case MoveMade moveMade -> {
+                switchPlayer(moveMade);
+                printBoard();
+            }
             default -> throw new UnsupportedOperationException();
         }
 
+    }
+
+    private void printBoard() {
+        printer.print(chessGame.getBoard());
     }
 
     private void switchPlayer(MoveMade moveMade) {
