@@ -5,7 +5,7 @@ import ddd.game.domain.pieces.ChessPiece;
 import ddd.game.domain.pieces.Pawn;
 import ddd.game.rules.ChessPieceIsOnPosition;
 import ddd.game.rules.LastMoveMustBeDifferentColor;
-import ddd.game.rules.MoveCanBeMade;
+import ddd.game.rules.PieceCanBeMovedInDirection;
 import ddd.game.rules.PlayerMustMoveOwnChessPiece;
 
 import java.util.*;
@@ -17,6 +17,7 @@ public class ChessGame extends Entity<ChessGame.Id> {
     private final List<Move> moves;
     private Player white;
     private Player black;
+
     public ChessGame(Id id) {
         super(id);
         board = new HashMap<>();
@@ -40,11 +41,15 @@ public class ChessGame extends Entity<ChessGame.Id> {
         new ChessPieceIsOnPosition(board, move).checkRule();
         new PlayerMustMoveOwnChessPiece(board, move, white.equals(player)).checkRule();
         new LastMoveMustBeDifferentColor(board, moves, white.equals(player)).checkRule();
-        new MoveCanBeMade(board, move).checkRule();
+        new PieceCanBeMovedInDirection(board, move).checkRule();
 
         board.remove(move.source());
         board.put(move.target(), chessPiece);
         moves.add(move);
+    }
+
+    public Player switchCurrentPlayer(final Player currentPlayer) {
+        return currentPlayer == white ? black : white;
     }
 
     public record Id(UUID id) {

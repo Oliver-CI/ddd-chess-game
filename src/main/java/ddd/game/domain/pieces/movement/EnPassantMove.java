@@ -7,7 +7,14 @@ public record EnPassantMove(ChessPieceColor color) implements MovementStrategy {
 
     @Override
     public boolean supportsMove(Move move) {
-        final int targetY = move.target().getY();
-        return move.source().getY() == 2 && (targetY == 3 || targetY == 4);
+        final int diff = Math.abs(move.source().getY() - move.target().getY());
+        if (diff > 1) {
+            if (ChessPieceColor.WHITE.equals(color)) {
+                return move.source().getY() == 2;
+            } else {
+                return move.source().getY() == 7;
+            }
+        }
+        return true;
     }
 }

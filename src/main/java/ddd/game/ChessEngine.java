@@ -36,9 +36,8 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     }
 
     private void switchPlayer(MoveMade moveMade) {
-//        final Player player = moveMade.getCurrentPlayer() == white ? black : white;
-//        raiseEvent(new TurnAssigned(player));
-        throw new UnsupportedOperationException();
+        final Player player = chessGame.switchCurrentPlayer(moveMade.getCurrentPlayer());
+        raiseEvent(new TurnAssigned(player));
     }
 
     private void setActivePlayer(TurnAssigned turnAssigned) {
