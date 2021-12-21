@@ -8,15 +8,7 @@ import ddd.game.repositories.ChessGameRepository;
 
 import java.util.List;
 
-public class CommandHandler {
-
-    private final ChessGameRepository repository;
-    private final EventBus eventBus;
-
-    public CommandHandler(ChessGameRepository repository, EventBus eventBus) {
-        this.repository = repository;
-        this.eventBus = eventBus;
-    }
+public record CommandHandler(ChessGameRepository repository, EventBus eventBus) {
 
     public ChessGame.Id executeCommand(StartGame command) {
         final ChessGameAggregate chessGameAggregate = new ChessGameAggregate();

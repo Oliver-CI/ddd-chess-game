@@ -23,9 +23,11 @@ public class Main {
         System.out.println("**************************");
         System.out.println("*     The Bruur Game     *");
         System.out.println("**************************\n");
+
         var eventBus = new SimpleEventBus();
         var boardPrinter = new BoardPrinter();
         eventBus.subscribe(boardPrinter);
+
         final CommandHandler commandHandler = new CommandHandler(new ChessGameRepository(), eventBus);
         final UUID gameInvite = UUID.randomUUID();
         var player1 = new Player(new Player.Id(UUID.randomUUID()));
