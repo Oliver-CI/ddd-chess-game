@@ -1,12 +1,11 @@
 package ddd.game.commands;
 
 import ddd.core.DomainEvent;
-import ddd.game.ChessEngine;
+import ddd.game.ChessGameAggregate;
 import ddd.game.domain.ChessGame;
 import ddd.game.repositories.ChessGameRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 public class CommandHandler {
 
@@ -17,21 +16,20 @@ public class CommandHandler {
     }
 
     public ChessGame.Id executeCommand(StartGame command) {
-        final ChessGame.Id id = new ChessGame.Id(UUID.randomUUID());
-        final ChessEngine chessEngine = new ChessEngine(id);
-        chessEngine.startGame(command);
+        final ChessGameAggregate chessGameAggregate = new ChessGameAggregate();
+        chessGameAggregate.startGame(command);
 
-        chessEngine.getEvents().forEach(event -> repository.save(chessEngine.getChessGame().getId(), event));
+        chessGameAggregate.getEvents().forEach(event -> repository.save(chessGameAggregate.getChessGame().getId(), event));
 
-        return id;
+        return chessGameAggregate.getId();
     }
 
     public void executeCommand(MakeMove command) {
         final List<DomainEvent> domainEvents = repository.findById(command.chessGameId());
 
-        final ChessEngine chessEngine = new ChessEngine(command.chessGameId(), domainEvents);
+        final ChessGameAggregate chessGameAggregate = new ChessGameAggregate(command.chessGameId(), domainEvents);
 
-        chessEngine.makeMove(command);
-        chessEngine.getEvents().forEach(event -> repository.save(chessEngine.getChessGame().getId(), event));
+        chessGameAggregate.makeMove(command);
+        chessGameAggregate.getEvents().forEach(event -> repository.save(chessGameAggregate.getChessGame().getId(), event));
     }
 }

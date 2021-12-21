@@ -12,17 +12,18 @@ import ddd.game.events.MoveMade;
 import ddd.game.events.TurnAssigned;
 
 import java.util.List;
+import java.util.UUID;
 
-public class ChessEngine extends AggregateRoot<ChessGame.Id> {
+public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
 
     private ChessGame chessGame;
     private final BoardPrinter printer = new BoardPrinter();
 
-    public ChessEngine(ChessGame.Id chessGameId) {
-        super(chessGameId);
+    public ChessGameAggregate() {
+        super(new ChessGame.Id(UUID.randomUUID()));
     }
 
-    public ChessEngine(ChessGame.Id chessGameId, List<DomainEvent> domainEvents) {
+    public ChessGameAggregate(ChessGame.Id chessGameId, List<DomainEvent> domainEvents) {
         super(chessGameId, domainEvents);
     }
 
