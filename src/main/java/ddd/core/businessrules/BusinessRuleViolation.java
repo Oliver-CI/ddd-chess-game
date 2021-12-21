@@ -1,4 +1,3 @@
 package ddd.core.businessrules;
 
-public class BusinessRuleViolation {
-}
+public record BusinessRuleViolation(String message) {}

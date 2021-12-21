@@ -1,5 +1,7 @@
 package ddd;
 
+import ddd.core.businessrules.BusinessRuleViolation;
+import ddd.core.businessrules.BusinessRuleViolationException;
 import ddd.game.commands.CommandHandler;
 import ddd.game.commands.MakeMove;
 import ddd.game.commands.StartGame;
@@ -8,6 +10,7 @@ import ddd.game.domain.Player;
 import ddd.game.domain.Position;
 import ddd.game.repositories.ChessGameRepository;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -37,8 +40,13 @@ public class Main {
                     final MakeMove makeMove = new MakeMove(new Move(p1, p2), chessGameId, player);
                     validMove = commandHandler.executeCommand(makeMove);
                     player = player == player1 ? player2 : player1;
+                } catch (BusinessRuleViolationException businessRuleViolationException) {
+                    final List<BusinessRuleViolation> violations = businessRuleViolationException.getViolations();
+                    System.out.println("\n* violations *\n-----------------------------------------------------------");
+                    violations.forEach(System.out::println);
+                    System.out.println();
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
             }
         }

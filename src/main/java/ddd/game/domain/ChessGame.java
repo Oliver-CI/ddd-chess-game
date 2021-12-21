@@ -9,7 +9,10 @@ import ddd.game.rules.PieceCanBeMovedInDirection;
 import ddd.game.rules.PlayerMustMoveOwnChessPiece;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Getter
@@ -38,10 +41,11 @@ public class ChessGame extends Entity<ChessGame.Id> {
     }
 
     public void validateMove(Move move, Player player) {
-        new ChessPieceIsOnPosition(board, move).checkRule();
-        new PlayerMustMoveOwnChessPiece(board, move, white.equals(player)).checkRule();
-        new LastMoveMustBeDifferentColor(board, moves, white.equals(player)).checkRule();
-        new PieceCanBeMovedInDirection(board, move).checkRule();
+        new ChessPieceIsOnPosition(board, move).throwIfNotSatisfied();
+        new PlayerMustMoveOwnChessPiece(board, move, white.equals(player))
+                .and(new LastMoveMustBeDifferentColor(board, moves, white.equals(player)))
+                .and(new PieceCanBeMovedInDirection(board, move))
+                .throwIfNotSatisfied();
     }
 
     public void makeMove(Move move) {

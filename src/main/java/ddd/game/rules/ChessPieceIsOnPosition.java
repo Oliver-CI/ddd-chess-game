@@ -1,12 +1,15 @@
 package ddd.game.rules;
 
+import ddd.core.businessrules.BusinessRule;
+import ddd.core.businessrules.BusinessRuleViolation;
 import ddd.game.domain.Move;
 import ddd.game.domain.Position;
 import ddd.game.domain.pieces.ChessPiece;
 
+import java.util.List;
 import java.util.Map;
 
-public class ChessPieceIsOnPosition {
+public class ChessPieceIsOnPosition extends BusinessRule {
 
     private final Map<Position, ChessPiece> board;
     private final Move move;
@@ -16,10 +19,11 @@ public class ChessPieceIsOnPosition {
         this.move = move;
     }
 
-    public void checkRule() {
+    @Override
+    public List<BusinessRuleViolation> checkRule() {
         final ChessPiece chessPiece = board.get(move.source());
-        if (chessPiece != null) return;
+        if (chessPiece != null) return List.of();
 
-        throw new BusinessRuleViolationException("No chess piece found on selected position");
+        return List.of(new BusinessRuleViolation("No chess piece found on selected position"));
     }
 }
