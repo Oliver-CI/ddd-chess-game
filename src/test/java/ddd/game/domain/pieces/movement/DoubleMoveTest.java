@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class EnPassantMoveTest {
+class DoubleMoveTest {
 
-    private EnPassantMove sut;
+    private DoubleMove sut;
 
 
     @Test
     void supportsMoveSingleWhite() {
         // Arrange
-        sut = new EnPassantMove(ChessPieceColor.WHITE);
+        sut = new DoubleMove(ChessPieceColor.WHITE);
         var move = new Move(new Position("a2"), new Position("a3"));
 
         // Act

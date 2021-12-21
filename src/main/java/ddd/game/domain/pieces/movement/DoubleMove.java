@@ -3,7 +3,7 @@ package ddd.game.domain.pieces.movement;
 import ddd.game.domain.ChessPieceColor;
 import ddd.game.domain.Move;
 
-public record EnPassantMove(ChessPieceColor color) implements MovementStrategy {
+public record DoubleMove(ChessPieceColor color) implements MovementStrategy {
 
     @Override
     public boolean supportsMove(Move move) {

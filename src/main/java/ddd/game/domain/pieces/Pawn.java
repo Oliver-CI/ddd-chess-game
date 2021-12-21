@@ -7,21 +7,21 @@ import ddd.game.domain.pieces.movement.*;
 import java.util.List;
 
 public class Pawn extends ChessPiece {
-    private final EnPassantMove enPassantMove;
+    private final DoubleMove doubleMove;
 
     public Pawn(ChessPieceColor chessPieceColor) {
         super(chessPieceColor);
-        enPassantMove = new EnPassantMove(chessPieceColor);
+        doubleMove = new DoubleMove(chessPieceColor);
     }
 
     @Override
     public List<MovementStrategy> getMovementStrategies() {
-        return List.of(new VerticalMove(Range.EN_PASSANT, true), enPassantMove);
+        return List.of(new VerticalMove(Range.DOUBLE, true), doubleMove);
     }
 
     @Override
     public List<MovementStrategy> getAttackingStrategies() {
-        return List.of(new VerticalMove(Range.SINGLE, false), new HorizontalMove(Range.SINGLE), enPassantMove);
+        return List.of(new VerticalMove(Range.SINGLE, false), new HorizontalMove(Range.SINGLE), doubleMove);
     }
 
     @Override
