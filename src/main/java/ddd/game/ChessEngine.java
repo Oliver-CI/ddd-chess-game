@@ -32,7 +32,7 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
             case GameStarted gameStarted -> setPlayer(gameStarted);
             case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
             case MoveMade moveMade -> {
-                switchPlayer(moveMade);
+                chessGame.makeMove(moveMade.getMove());
                 printBoard();
             }
             default -> throw new UnsupportedOperationException();
@@ -44,14 +44,9 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
         printer.print(chessGame.getBoard());
     }
 
-    private void switchPlayer(MoveMade moveMade) {
-        final Player player = chessGame.switchCurrentPlayer(moveMade.getCurrentPlayer());
-        raiseEvent(new TurnAssigned(player));
-    }
-
-    private void setActivePlayer(TurnAssigned turnAssigned) {
+    private void setActivePlayer(TurnAssigned ignored) {
         //notify Player
-        System.out.println("It is the turn of " + turnAssigned.getCurrentPlayer());
+        System.out.println("It is the turn of " + chessGame.getCurrentPlayer());
     }
 
     private void setPlayer(GameStarted gameStarted) {
@@ -64,14 +59,15 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     public void startGame(StartGame startGame) {
         chessGame.loadBoard();
         raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
-        raiseEvent(new TurnAssigned(startGame.playerId1()));
+        raiseEvent(new TurnAssigned());
     }
 
     public boolean makeMove(MakeMove makeMove) {
         final Player currentPlayer = makeMove.currentPlayer();
         final Move move = makeMove.move();
-        chessGame.makeMove(move, currentPlayer);
+        chessGame.validateMove(move, currentPlayer);
         raiseEvent(new MoveMade(move, currentPlayer));
+        raiseEvent(new TurnAssigned());
         return true;
     }
     // endregion

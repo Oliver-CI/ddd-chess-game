@@ -7,14 +7,16 @@ import ddd.game.rules.ChessPieceIsOnPosition;
 import ddd.game.rules.LastMoveMustBeDifferentColor;
 import ddd.game.rules.PieceCanBeMovedInDirection;
 import ddd.game.rules.PlayerMustMoveOwnChessPiece;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Stream;
 
+@Getter
 public class ChessGame extends Entity<ChessGame.Id> {
 
     private final Map<Position, ChessPiece> board;
-    private final List<Move> moves;
+    private final LinkedList<Move> moves;
     private Player white;
     private Player black;
 
@@ -35,32 +37,29 @@ public class ChessGame extends Entity<ChessGame.Id> {
         black = playerBlack;
     }
 
-    public void makeMove(Move move, Player player) {
-        final ChessPiece chessPiece = board.get(move.source());
-
+    public void validateMove(Move move, Player player) {
         new ChessPieceIsOnPosition(board, move).checkRule();
         new PlayerMustMoveOwnChessPiece(board, move, white.equals(player)).checkRule();
         new LastMoveMustBeDifferentColor(board, moves, white.equals(player)).checkRule();
         new PieceCanBeMovedInDirection(board, move).checkRule();
+    }
 
+    public void makeMove(Move move) {
+        final ChessPiece chessPiece = board.get(move.source());
         board.remove(move.source());
         board.put(move.target(), chessPiece);
         moves.add(move);
     }
 
-    public Player switchCurrentPlayer(final Player currentPlayer) {
-        return currentPlayer == white ? black : white;
+    public Player getCurrentPlayer() {
+        if (moves.isEmpty()) return white;
+
+        final Position target = moves.getLast().target();
+        final ChessPieceColor color = board.get(target).getColor();
+
+        return color == ChessPieceColor.WHITE ? black : white;
     }
 
-    public record Id(UUID id) {
+    public record Id(UUID id) {}
 
-    }
-
-    public Map<Position, ChessPiece> getBoard() {
-        return board;
-    }
-
-    public List<Move> getMoves() {
-        return moves;
-    }
 }
