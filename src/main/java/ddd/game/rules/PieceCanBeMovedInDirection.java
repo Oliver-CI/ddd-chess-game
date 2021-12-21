@@ -28,7 +28,7 @@ public class PieceCanBeMovedInDirection {
         if (nonNull(target) && !target.getColor().equals(movingPiece.getColor())) {
             final Map<Boolean, List<MovementStrategy>> map = movingPiece.getAttackingStrategies().stream().collect(Collectors.groupingBy(strategy -> strategy.supportsMove(move)));
             checkStrategies(map);
-            if (!target.canAttack(move)) {
+            if (!movingPiece.canAttack(move)) {
                 throw new IllegalArgumentException("Piece cannot be attack piece due to invalid move");
             }
         } else if (nonNull(target) && target.getColor().equals(movingPiece.getColor())) {
