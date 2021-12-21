@@ -7,6 +7,7 @@ import ddd.game.commands.StartGame;
 import ddd.game.domain.ChessGame;
 import ddd.game.domain.Move;
 import ddd.game.domain.Player;
+import ddd.game.events.BoardUpdated;
 import ddd.game.events.GameStarted;
 import ddd.game.events.MoveMade;
 import ddd.game.events.TurnAssigned;
@@ -17,7 +18,6 @@ import java.util.UUID;
 public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
 
     private ChessGame chessGame;
-    private final BoardPrinter printer = new BoardPrinter();
 
     public ChessGameAggregate() {
         super(new ChessGame.Id(UUID.randomUUID()));
@@ -37,19 +37,12 @@ public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
         switch (domainEvent) {
             case GameStarted gameStarted -> handleGameStarted(gameStarted);
             case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
-            case MoveMade moveMade -> {
-                chessGame.makeMove(moveMade.getMove());
-                printBoard();
+            case MoveMade moveMade -> chessGame.makeMove(moveMade.move());
+            case BoardUpdated boardUpdated -> {
             }
             default -> throw new UnsupportedOperationException();
         }
 
-    }
-
-    private void printBoard() {
-        if (!isReplaying()) {
-            printer.print(chessGame.getBoard());
-        }
     }
 
     private void setActivePlayer(TurnAssigned ignored) {
@@ -72,6 +65,7 @@ public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
     public void startGame(StartGame startGame) {
         raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
         raiseEvent(new TurnAssigned());
+        raiseEvent(new BoardUpdated(chessGame.getBoard()));
     }
 
     public void makeMove(MakeMove makeMove) {
@@ -80,6 +74,7 @@ public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
         chessGame.validateMove(move, currentPlayer);
         raiseEvent(new MoveMade(move, currentPlayer));
         raiseEvent(new TurnAssigned());
+        raiseEvent(new BoardUpdated(chessGame.getBoard()));
     }
     // endregion
 }

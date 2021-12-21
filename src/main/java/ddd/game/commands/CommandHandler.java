@@ -1,6 +1,7 @@
 package ddd.game.commands;
 
 import ddd.core.DomainEvent;
+import ddd.core.EventBus;
 import ddd.game.ChessGameAggregate;
 import ddd.game.domain.ChessGame;
 import ddd.game.repositories.ChessGameRepository;
@@ -10,16 +11,21 @@ import java.util.List;
 public class CommandHandler {
 
     private final ChessGameRepository repository;
+    private final EventBus eventBus;
 
-    public CommandHandler(ChessGameRepository repository) {
+    public CommandHandler(ChessGameRepository repository, EventBus eventBus) {
         this.repository = repository;
+        this.eventBus = eventBus;
     }
 
     public ChessGame.Id executeCommand(StartGame command) {
         final ChessGameAggregate chessGameAggregate = new ChessGameAggregate();
         chessGameAggregate.startGame(command);
 
-        chessGameAggregate.getEvents().forEach(event -> repository.save(chessGameAggregate.getChessGame().getId(), event));
+        chessGameAggregate.getEvents().forEach(event -> {
+            repository.save(chessGameAggregate.getChessGame().getId(), event);
+            eventBus.publish(event);
+        });
 
         return chessGameAggregate.getId();
     }
@@ -30,6 +36,10 @@ public class CommandHandler {
         final ChessGameAggregate chessGameAggregate = new ChessGameAggregate(command.chessGameId(), domainEvents);
 
         chessGameAggregate.makeMove(command);
-        chessGameAggregate.getEvents().forEach(event -> repository.save(chessGameAggregate.getChessGame().getId(), event));
+
+        chessGameAggregate.getEvents().forEach(event -> {
+            repository.save(chessGameAggregate.getChessGame().getId(), event);
+            eventBus.publish(event);
+        });
     }
 }

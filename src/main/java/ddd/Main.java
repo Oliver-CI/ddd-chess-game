@@ -2,6 +2,8 @@ package ddd;
 
 import ddd.core.businessrules.BusinessRuleViolation;
 import ddd.core.businessrules.BusinessRuleViolationException;
+import ddd.game.BoardPrinter;
+import ddd.game.SimpleEventBus;
 import ddd.game.commands.CommandHandler;
 import ddd.game.commands.MakeMove;
 import ddd.game.commands.StartGame;
@@ -21,7 +23,10 @@ public class Main {
         System.out.println("**************************");
         System.out.println("*     The Bruur Game     *");
         System.out.println("**************************\n");
-        final CommandHandler commandHandler = new CommandHandler(new ChessGameRepository());
+        var eventBus = new SimpleEventBus();
+        var boardPrinter = new BoardPrinter();
+        eventBus.subscribe(boardPrinter);
+        final CommandHandler commandHandler = new CommandHandler(new ChessGameRepository(), eventBus);
         final UUID gameInvite = UUID.randomUUID();
         var player1 = new Player(new Player.Id(UUID.randomUUID()));
         var player2 = new Player(new Player.Id((UUID.randomUUID())));

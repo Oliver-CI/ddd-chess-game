@@ -5,5 +5,5 @@ package ddd.core;
  * Represents domain event (DDD).
  * </summary>
  */
-public abstract class DomainEvent {
+public interface DomainEvent {
 }
