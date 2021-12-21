@@ -30,15 +30,14 @@ public class Main {
 
         try (Scanner scanner = new Scanner(System.in)) {
             var player = player1;
-            var validMove = true;
-            while (validMove) {
+            while (true) {
                 try {
                     System.out.println("Make a move: position position");
                     final String[] input = scanner.nextLine().split(" ");
                     var p1 = new Position(input[0]);
                     var p2 = new Position(input[1]);
                     final MakeMove makeMove = new MakeMove(new Move(p1, p2), chessGameId, player);
-                    validMove = commandHandler.executeCommand(makeMove);
+                    commandHandler.executeCommand(makeMove);
                     player = player == player1 ? player2 : player1;
                 } catch (BusinessRuleViolationException businessRuleViolationException) {
                     final List<BusinessRuleViolation> violations = businessRuleViolationException.getViolations();

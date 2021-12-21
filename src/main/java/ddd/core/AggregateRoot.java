@@ -41,7 +41,7 @@ public abstract class AggregateRoot<I> extends Entity<I> {
      * </summary>
      * <param name="id">The unique id of the aggregate-root.</param>
      */
-    public AggregateRoot(I id) {
+    protected AggregateRoot(I id) {
         super(id);
         originalVersion = 0;
         version = 0;
@@ -56,7 +56,7 @@ public abstract class AggregateRoot<I> extends Entity<I> {
      * <param name="id">The unique Id of the aggregate.</param>
      * <param name="events">The events to replay.</param>
      */
-    public AggregateRoot(I id, List<DomainEvent> events) {
+    protected AggregateRoot(I id, List<DomainEvent> events) {
         this(id);
         isReplaying = true;
         for (DomainEvent evt : events) {
@@ -71,7 +71,7 @@ public abstract class AggregateRoot<I> extends Entity<I> {
         return events;
     }
 
-    protected boolean isRelaying() {
+    protected boolean isReplaying() {
         return isReplaying;
     }
 

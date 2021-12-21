@@ -11,15 +11,19 @@ import ddd.game.events.GameStarted;
 import ddd.game.events.MoveMade;
 import ddd.game.events.TurnAssigned;
 
+import java.util.List;
+
 public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
-    private final ChessGame chessGame;
-    private final BoardPrinter printer;
+    private ChessGame chessGame;
+    private final BoardPrinter printer = new BoardPrinter();
 
-    public ChessEngine(ChessGame chessGame) {
-        super(chessGame.getId());
-        this.chessGame = chessGame;
-        this.printer = new BoardPrinter();
+    public ChessEngine(ChessGame.Id chessGameId) {
+        super(chessGameId);
+    }
+
+    public ChessEngine(ChessGame.Id chessGameId, List<DomainEvent> domainEvents) {
+        super(chessGameId, domainEvents);
     }
 
     public ChessGame getChessGame() {
@@ -27,9 +31,10 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     }
 
     // region domain events
+    @Override
     public void when(DomainEvent domainEvent) {
         switch (domainEvent) {
-            case GameStarted gameStarted -> setPlayer(gameStarted);
+            case GameStarted gameStarted -> handleGameStarted(gameStarted);
             case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
             case MoveMade moveMade -> {
                 chessGame.makeMove(moveMade.getMove());
@@ -41,7 +46,9 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     }
 
     private void printBoard() {
-        printer.print(chessGame.getBoard());
+        if (!isReplaying()) {
+            printer.print(chessGame.getBoard());
+        }
     }
 
     private void setActivePlayer(TurnAssigned ignored) {
@@ -49,7 +56,9 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
         System.out.println("It is the turn of " + chessGame.getCurrentPlayer());
     }
 
-    private void setPlayer(GameStarted gameStarted) {
+    private void handleGameStarted(GameStarted gameStarted) {
+        chessGame = new ChessGame(this.getId());
+        chessGame.loadBoard();
         chessGame.assignPlayers(gameStarted.getPlayerWhite(), gameStarted.getPlayerBlack());
     }
 
@@ -57,18 +66,16 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
 
     // region command
     public void startGame(StartGame startGame) {
-        chessGame.loadBoard();
         raiseEvent(new GameStarted(startGame.playerId1(), startGame.playerId2()));
         raiseEvent(new TurnAssigned());
     }
 
-    public boolean makeMove(MakeMove makeMove) {
+    public void makeMove(MakeMove makeMove) {
         final Player currentPlayer = makeMove.currentPlayer();
         final Move move = makeMove.move();
         chessGame.validateMove(move, currentPlayer);
         raiseEvent(new MoveMade(move, currentPlayer));
         raiseEvent(new TurnAssigned());
-        return true;
     }
     // endregion
 }
