@@ -54,7 +54,8 @@ public class ChessEngine extends AggregateRoot<ChessGame.Id> {
     private void setActivePlayer(TurnAssigned ignored) {
         //notify Player
         if (!isReplaying()) {
-            System.out.println("It is the turn of " + chessGame.getCurrentPlayer());
+            var color = chessGame.getCurrentPlayer() == chessGame.getWhite() ? "white" : "black";
+            System.out.println("It is the turn of " + color);
         }
     }
 

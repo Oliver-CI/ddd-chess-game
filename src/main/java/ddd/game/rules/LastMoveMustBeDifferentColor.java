@@ -32,8 +32,12 @@ public class LastMoveMustBeDifferentColor extends BusinessRule {
 
     private boolean isTheLastMoveOfDifferentColor() {
         final Move lastMove = moves.get(moves.size() - 1);
-        final ChessPiece chessPiece = board.get(lastMove.target());
+        final ChessPiece chessPieceOfLastMove = board.get(lastMove.target());
 
-        return isWhite && chessPiece.getColor() == ChessPieceColor.BLACK;
+        if (isWhite) {
+            return chessPieceOfLastMove.getColor() == ChessPieceColor.BLACK;
+        } else {
+            return chessPieceOfLastMove.getColor() == ChessPieceColor.WHITE;
+        }
     }
 }

@@ -29,26 +29,27 @@ public class PieceCanBeMovedInDirection extends BusinessRule {
         final ChessPiece targetChessPiece = board.get(move.target());
 
         //TODO: maybe split in different rules?
+        var violations = new ArrayList<BusinessRuleViolation>();
         if (nonNull(targetChessPiece) && !targetChessPiece.getColor().equals(movingChessPiece.getColor())) {
             final Map<Boolean, List<MovementStrategy>> map = movingChessPiece.getAttackingStrategies().stream().collect(Collectors.groupingBy(strategy -> strategy.supportsMove(move)));
-            final List<BusinessRuleViolation> businessRuleViolations = checkStrategies(map);
+            violations.addAll(checkStrategies(map));
             if (!movingChessPiece.canAttack(move)) {
-                businessRuleViolations.add(new BusinessRuleViolation("Piece cannot be attack piece due to invalid move"));
+                violations.add(new BusinessRuleViolation("Piece cannot attack piece due to invalid move"));
             }
-            return businessRuleViolations;
         } else if (nonNull(targetChessPiece) && targetChessPiece.getColor().equals(movingChessPiece.getColor())) {
-            return List.of(new BusinessRuleViolation("Piece cannot be moved as another piece blocks the position"));
+            violations.add(new BusinessRuleViolation("Piece cannot be moved as another piece blocks the position"));
         } else {
             final Map<Boolean, List<MovementStrategy>> map = movingChessPiece.getMovementStrategies().stream().collect(Collectors.groupingBy(strategy -> strategy.supportsMove(move)));
-            return checkStrategies(map);
+            violations.addAll(checkStrategies(map));
         }
+        return violations;
     }
 
-    private List<BusinessRuleViolation> checkStrategies(Map<Boolean, List<MovementStrategy>> strategyMap) {
+    private List<BusinessRuleViolation> checkStrategies(final Map<Boolean, List<MovementStrategy>> strategyMap) {
         final List<MovementStrategy> failedStrategies = strategyMap.get(Boolean.FALSE);
         if (nonNull(failedStrategies) && !failedStrategies.isEmpty()) {
             final String failure = failedStrategies.stream().map(o -> o.getClass().getSimpleName()).collect(Collectors.joining(","));
-            return new ArrayList<>(List.of(new BusinessRuleViolation("Move cannot be made due to: " + failure)));
+            return List.of(new BusinessRuleViolation("Move cannot be made due to: " + failure));
         }
 
         return List.of();
