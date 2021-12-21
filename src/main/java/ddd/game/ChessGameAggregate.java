@@ -38,8 +38,7 @@ public class ChessGameAggregate extends AggregateRoot<ChessGame.Id> {
             case GameStarted gameStarted -> handleGameStarted(gameStarted);
             case TurnAssigned turnAssigned -> setActivePlayer(turnAssigned);
             case MoveMade moveMade -> chessGame.makeMove(moveMade.move());
-            case BoardUpdated boardUpdated -> {
-            }
+            case BoardUpdated boardUpdated -> {}
             default -> throw new UnsupportedOperationException();
         }
 

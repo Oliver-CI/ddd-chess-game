@@ -1,9 +1,7 @@
 package ddd.game;
 
-import ddd.core.EventHandler;
 import ddd.game.domain.Position;
 import ddd.game.domain.pieces.ChessPiece;
-import ddd.game.events.BoardUpdated;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -34,7 +32,7 @@ import static java.util.Objects.nonNull;
  * ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝ ┊
  * ╰┈a┈┈┈b┈┈┈c┈┈┈d┈┈┈e┈┈┈f┈┈┈g┈┈┈h┈┈┈╯
  */
-public class BoardPrinter implements EventHandler<BoardUpdated> {
+public class BoardPrinter {
 
     private static final String TOPP_LINE = "╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\n";
     private static final String SEPARATOR = "╟───┼───┼───┼───┼───┼───┼───┼───╢\n";
@@ -48,19 +46,14 @@ public class BoardPrinter implements EventHandler<BoardUpdated> {
         this.printStream = new PrintStream(System.out);
     }
 
-    @Override
-    public void handle(BoardUpdated event) {
-        print(event.board());
-    }
-
-    private void print(Map<Position, ChessPiece> board) {
+    public void print(Map<Position, ChessPiece> board) {
         final String boardString = getRawString(board);
 
         PrintWriter printWriter = new PrintWriter(printStream, true, StandardCharsets.UTF_8);
         printWriter.println(boardString);
     }
 
-    public String getRawString(Map<Position, ChessPiece> board) {
+    private String getRawString(Map<Position, ChessPiece> board) {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(TOPP_LINE);

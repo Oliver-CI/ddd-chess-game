@@ -3,29 +3,31 @@ package ddd.game;
 import ddd.core.DomainEvent;
 import ddd.core.EventBus;
 import ddd.core.EventHandler;
-import ddd.game.events.BoardUpdated;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class SimpleEventBus implements EventBus {
 
-    private final List<EventHandler> handlerList;
+    private final Map<Class<? extends DomainEvent>, Set<? extends EventHandler<? extends DomainEvent>>> registry;
 
     public SimpleEventBus() {
-        handlerList = new ArrayList<>();
+        registry = new HashMap<>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends DomainEvent> void publish(T domainEvent) {
-        //todo: fix generics
-        if(domainEvent instanceof BoardUpdated){
-            handlerList.forEach(h -> h.handle(domainEvent));
-        }
+        var eventHandlers = (Set<EventHandler<T>>) registry.getOrDefault(domainEvent.getClass(), Set.of());
+        eventHandlers.forEach(eventHandler -> eventHandler.handle(domainEvent));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <T extends DomainEvent> void subscribe(EventHandler<T> eventListener) {
-        handlerList.add(eventListener);
+    public <T extends DomainEvent> void subscribe(EventHandlerRegistration<T> registration) {
+        var eventHandlers = (Set<EventHandler<T>>) registry.computeIfAbsent(registration.domainEventClass(), x -> new HashSet<>());
+        eventHandlers.add(registration.eventHandler());
     }
 }

@@ -1,15 +1,19 @@
 package ddd;
 
+import ddd.core.EventHandler;
 import ddd.core.businessrules.BusinessRuleViolation;
 import ddd.core.businessrules.BusinessRuleViolationException;
 import ddd.game.BoardPrinter;
+import ddd.game.EventHandlerRegistration;
 import ddd.game.SimpleEventBus;
 import ddd.game.commands.CommandHandler;
 import ddd.game.commands.MakeMove;
 import ddd.game.commands.StartGame;
+import ddd.game.domain.ChessGame;
 import ddd.game.domain.Move;
 import ddd.game.domain.Player;
 import ddd.game.domain.Position;
+import ddd.game.events.BoardUpdated;
 import ddd.game.repositories.ChessGameRepository;
 
 import java.util.List;
@@ -24,16 +28,20 @@ public class Main {
         System.out.println("*     The Bruur Game     *");
         System.out.println("**************************\n");
 
+        var boardPrinterService = new BoardPrinter();
+
+        final EventHandler<BoardUpdated> boardUpdatedEventHandler = event -> boardPrinterService.print(event.board());
         var eventBus = new SimpleEventBus();
-        var boardPrinter = new BoardPrinter();
-        eventBus.subscribe(boardPrinter);
+        eventBus.subscribe(new EventHandlerRegistration<>(BoardUpdated.class, boardUpdatedEventHandler));
 
         final CommandHandler commandHandler = new CommandHandler(new ChessGameRepository(), eventBus);
+
         final UUID gameInvite = UUID.randomUUID();
-        var player1 = new Player(new Player.Id(UUID.randomUUID()));
-        var player2 = new Player(new Player.Id((UUID.randomUUID())));
+        final var player1 = new Player(new Player.Id(UUID.randomUUID()));
+        final var player2 = new Player(new Player.Id((UUID.randomUUID())));
+
         final StartGame command = new StartGame(player1, player2, gameInvite);
-        var chessGameId = commandHandler.executeCommand(command);
+        final ChessGame.Id chessGameId = commandHandler.executeCommand(command);
 
         try (Scanner scanner = new Scanner(System.in)) {
             var player = player1;
