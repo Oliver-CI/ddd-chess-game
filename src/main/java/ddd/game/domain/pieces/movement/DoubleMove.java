@@ -8,7 +8,7 @@ public record DoubleMove(ChessPieceColor color) implements MovementStrategy {
     @Override
     public boolean supportsMove(Move move) {
         final int diff = Math.abs(move.source().getY() - move.target().getY());
-        if (diff > 1) {
+        if (diff == Range.DOUBLE.value()) {
             if (ChessPieceColor.WHITE.equals(color)) {
                 return move.source().getY() == 2;
             } else {
