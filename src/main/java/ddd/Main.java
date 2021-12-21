@@ -29,13 +29,17 @@ public class Main {
             var player = player1;
             var validMove = true;
             while (validMove) {
-                System.out.println("Make a move: position position");
-                final String[] input = scanner.nextLine().split(" ");
-                var p1 = new Position(input[0]);
-                var p2 = new Position(input[1]);
-                final MakeMove makeMove = new MakeMove(new Move(p1, p2), chessGameId, player);
-                validMove = commandHandler.executeCommand(makeMove);
-                player = player == player1 ? player2 : player1;
+                try {
+                    System.out.println("Make a move: position position");
+                    final String[] input = scanner.nextLine().split(" ");
+                    var p1 = new Position(input[0]);
+                    var p2 = new Position(input[1]);
+                    final MakeMove makeMove = new MakeMove(new Move(p1, p2), chessGameId, player);
+                    validMove = commandHandler.executeCommand(makeMove);
+                    player = player == player1 ? player2 : player1;
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         }
     }
